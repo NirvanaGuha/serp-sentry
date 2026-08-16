@@ -1,0 +1,39 @@
+name: serp-sentry
+
+on:
+  schedule:
+    - cron: "30 7 * * 1"   # Mondays 07:30 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  track:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: uv pip install --system .
+
+      # Ranking snapshots survive between runs.
+      - name: Restore state
+        uses: actions/cache@v4
+        with:
+          path: ~/.serp-sentry
+          key: sentry-state-${{ github.run_id }}
+          restore-keys: sentry-state-
+
+      - name: Run
+        env:
+          SERP_API_KEY: ${{ secrets.SERP_API_KEY }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          SENTRY_SLACK_WEBHOOK: ${{ secrets.SENTRY_SLACK_WEBHOOK }}
+          SENTRY_TELEGRAM_TOKEN: ${{ secrets.SENTRY_TELEGRAM_TOKEN }}
+          SENTRY_TELEGRAM_CHAT_ID: ${{ secrets.SENTRY_TELEGRAM_CHAT_ID }}
+        run: serp-sentry run

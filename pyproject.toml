@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "serp-sentry"
+version = "0.1.0"
+description = "Weekly rank tracking that only speaks when something moved: your positions, new top-10 entrants, dropouts — with an AI gap-analysis of what changed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Nirvana Guha" }]
+dependencies = [
+    "growthkit @ git+https://github.com/NirvanaGuha/growthkit",
+    "pyyaml>=6.0",
+    "requests>=2.31",
+]
+
+[project.scripts]
+serp-sentry = "serp_sentry.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["serp_sentry*"]

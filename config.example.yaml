@@ -1,0 +1,40 @@
+# serp-sentry config. Copy to serp-sentry.yaml — or run `serp-sentry init`.
+# Secrets (API keys, webhooks) go in env vars, never in this file.
+
+site_domain: example.com        # your site (subdomains count as you)
+
+keywords:
+  - cart abandonment emails
+  - push notification tools
+  - best crm for small business
+
+top_n: 10                       # how deep to watch
+min_position_change: 3          # your own moves smaller than this are noise
+location: {gl: us, hl: en}      # Google country/language
+
+serp:
+  provider: serper              # serper (2,500 free) | serpapi (100/mo free)
+  api_key_env: SERP_API_KEY
+
+# AI gap-analysis when rankings change (optional — raw events without it).
+# Any OpenAI-compatible API:
+#   OpenAI:     base_url: https://api.openai.com/v1        model: gpt-4o-mini
+#   Anthropic:  base_url: https://api.anthropic.com/v1     model: claude-opus-5
+#   OpenRouter: base_url: https://openrouter.ai/api/v1     model: anthropic/claude-sonnet-5
+#   Ollama:     base_url: http://localhost:11434/v1        model: llama3.1        (no key)
+#   LM Studio:  base_url: http://localhost:1234/v1         model: (loaded model)  (no key)
+narration:
+  enabled: true
+  base_url: ""
+  model: ""
+  api_key_env: LLM_API_KEY
+  extra_context: ""             # e.g. "keywords 1-2 are our money terms"
+
+channels:
+  stdout: true
+  slack_webhook_env: SENTRY_SLACK_WEBHOOK
+  telegram_bot_token_env: SENTRY_TELEGRAM_TOKEN
+  telegram_chat_id_env: SENTRY_TELEGRAM_CHAT_ID
+  generic_webhook_env: SENTRY_WEBHOOK_URL
+
+state_path: ~/.serp-sentry/state.json
