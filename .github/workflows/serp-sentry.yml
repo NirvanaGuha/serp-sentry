@@ -19,7 +19,9 @@ jobs:
           python-version: "3.12"
 
       - name: Install
-        run: uv pip install --system .
+        run: |
+          uv venv .venv
+          uv pip install --python .venv/bin/python .
 
       # Ranking snapshots survive between runs.
       - name: Restore state
@@ -36,4 +38,4 @@ jobs:
           SENTRY_SLACK_WEBHOOK: ${{ secrets.SENTRY_SLACK_WEBHOOK }}
           SENTRY_TELEGRAM_TOKEN: ${{ secrets.SENTRY_TELEGRAM_TOKEN }}
           SENTRY_TELEGRAM_CHAT_ID: ${{ secrets.SENTRY_TELEGRAM_CHAT_ID }}
-        run: serp-sentry run
+        run: .venv/bin/serp-sentry run
